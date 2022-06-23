@@ -4,6 +4,7 @@
 import csv
 import argparse
 import random
+import numpy as np
 
 parser=argparse.ArgumentParser()
 parser.add_argument('num_o_objs', type=int)
@@ -22,6 +23,9 @@ header.append('C')
 # generate data for each object
 data = []
 cluster_ct = [0] * map_args.clusters
+
+# select cluster partitioning
+cluster_partition = np.cumsum([.43, .57])
 for i in range(map_args.num_o_objs):
     row = []
     row.append(str(i))
@@ -36,10 +40,10 @@ for i in range(map_args.num_o_objs):
     
     # randomly select a cluster for object
     cluster = random.random()
-    for j in range(1, map_args.clusters+1):
-        if cluster < j/map_args.clusters:
-            row.append(j)
-            cluster_ct[j-1] += 1
+    for k in range(map_args.clusters):
+        if cluster < cluster_partition[k]:
+            row.append(k+1)
+            cluster_ct[k] += 1
             break
     data.append(row)
 
@@ -48,7 +52,7 @@ for i in range (map_args.clusters):
     print('Objects in cluster ' + str(i+1) + ':', cluster_ct[i])
 
 # naming convention 'synthetic_data_(number of objects)_(number of tags)_(number of clusters)_(tag probability).csv'
-file_name = 'synthetic_data_' + str(map_args.num_o_objs) + '_' + str(map_args.num_o_tags) + '_' + str(map_args.clusters) + '_' + str(map_args.tag_prob) + '.csv'
+file_name = 'synthetic_flikr_' + str(map_args.num_o_objs) + '_' + str(map_args.num_o_tags) + '_' + str(map_args.clusters) + '_' + str(map_args.tag_prob) + '.csv'
 
 # write to csv file
 with open(file_name, 'w', encoding='UTF8', newline='') as f:
