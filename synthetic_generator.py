@@ -1,4 +1,4 @@
-# create csv file for synthetic data
+500# create csv file for synthetic data
 # used for experiments in (PAPER NAME PLACEHOLDER)
 
 import csv
@@ -15,13 +15,14 @@ user_namespace = UserNamespace()
 parser=argparse.ArgumentParser()
 parser.add_argument('num_o_objs', type=int)
 parser.add_argument('num_o_tags', type=int)
+parser.add_argument('tag_prob', type=float)
 parser.add_argument('clusters', type=int)
 parser.parse_known_args(namespace=user_namespace)
 parser.add_argument('-p', '--probs', nargs=user_namespace.clusters, type=float)
 map_args = parser.parse_args()
 
 
-if sum(map_args.probs != 1):
+if sum(map_args.probs) != 1:
     sys.exit("probabilities must add up to 1")
 
 # create header data
@@ -63,7 +64,7 @@ for i in range (map_args.clusters):
     print('Objects in cluster ' + str(i+1) + ':', cluster_ct[i])
 
 # naming convention 'synthetic_data_(number of objects)_(number of tags)_(number of clusters)_(tag probability).csv'
-file_name = 'synthetic_data_uneven_' + str(map_args.num_o_objs) + '_' + str(map_args.num_o_tags) + '_' + str(map_args.clusters) + '_' + str(map_args.tag_prob) + '.csv'
+file_name = 'synthetic_data_' + str(map_args.num_o_objs) + '_' + str(map_args.num_o_tags) + '_' + str(map_args.clusters) + '_' + str(map_args.tag_prob) + '.csv'
 
 # write to csv file
 with open(file_name, 'w', encoding='UTF8', newline='') as f:
